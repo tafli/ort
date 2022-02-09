@@ -87,13 +87,13 @@ jobs:
       uses: burrunan/gradle-cache-action@v1
       with:
         arguments: funTest -x :analyzer:funTest
-  funTest-analyzer:
-    if: ${{ false }}
-    needs: build
+  funTest-analyzer-docker:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Setup Java
       uses: actions/setup-java@v2
       with:
@@ -101,6 +101,4 @@ jobs:
         java-version: 11
         cache: gradle
     - name: Run functional tests
-      uses: burrunan/gradle-cache-action@v1
-      with:
-        arguments: :analyzer:funTest
+      run: ./batect --enable-buildkit --config-var gradle_console=plain funTest -- -p analyzer
